@@ -1,1 +1,80 @@
 
+datasource:
+    url: jdbc:mysql://localhost:3306/ecommerce_user_db
+    username: root
+    password: ${DB_PASSWORD:test@12345}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  cloud:
+    openfeign:
+      client:
+        config:
+          product-service:
+            connectTimeout: 2000
+            readTimeout: 3000
+
+server:
+  port: 8084
+
+security:
+  jwt:
+    secret: ${JWT_SECRET:VGhpc0lzQURldmVsb3BtZW50T25seVNlY3JldEtleUZvcldhbGdyZWVuczEyMzQ1Njc4OTA=}
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+# Keep your existing Resilience4j rate limiter,
+# retry, circuit breaker, and management settings below.
+
+resilience4j:
+  ratelimiter:
+    instances:
+      productService:
+        limitForPeriod: 5
+        limitRefreshPeriod: 1s
+        timeoutDuration: 0
+
+  retry:
+    instances:
+      productService:
+        maxAttempts: 3
+        waitDuration: 1s
+        enableExponentialBackoff: false
+        retryExceptions:
+          - feign.RetryableException
+          - feign.FeignException$ServiceUnavailable
+
+  circuitbreaker:
+    instances:
+      productService:
+        registerHealthIndicator: true
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 4
+        minimumNumberOfCalls: 2
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 2
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,circuitbreakers,ratelimiters,metrics
+  endpoint:
+    health:
+      show-details: always
