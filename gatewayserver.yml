@@ -45,7 +45,7 @@ cloud:
                 - Path=/api/orders/**
 
 server:
-  port: 8080
+  port: 8086
 
 security:
   jwt:
