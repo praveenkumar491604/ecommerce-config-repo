@@ -1,1 +1,62 @@
+cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+
+            # User Service - Existing Route
+            - id: user-service
+              uri: lb://user-service
+              predicates:
+                - Path=/api/createuser,/api/getuser/**,/api/getallusers,/api/users,/api/users/**,/api/updateuser/**,/api/deleteuser/**
+              filters:
+                - AddResponseHeader=X-Gateway, Walgreens
+
+            # User Service - Login
+            - id: user-auth
+              uri: lb://user-service
+              predicates:
+                - Path=/api/auth/**
+
+            # User Service - RewritePath Demo
+            - id: userservice
+              uri: lb://user-service
+              predicates:
+                - Path=/walgreens/userservice/api/**
+              filters:
+                - RewritePath=/walgreens/userservice/api/(?<segment>.*), /api/${segment}
+
+            # Product Service
+            - id: product-service
+              uri: lb://product-service
+              predicates:
+                - Path=/api/products/**
+
+            # Cart Service
+            - id: cart-service
+              uri: lb://cart-service
+              predicates:
+                - Path=/api/carts/**
+
+            # Order Service
+            - id: order-service
+              uri: lb://order-service
+              predicates:
+                - Path=/api/orders/**
+
+server:
+  port: 8080
+
+security:
+  jwt:
+    secret-base64: VGhpc0lzQURldmVsb3BtZW50T25seVNlY3JldEtleUZvcldhbGdyZWVuczEyMzQ1Njc4OTA=
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
 
