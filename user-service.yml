@@ -1,4 +1,6 @@
 spring:
+  app:
+    message: Updated through GitHub
   datasource:
     url: jdbc:mysql://localhost:3306/ecommerce_user_db
     username: root
