@@ -4,7 +4,11 @@ spring:
     username: root
     password: ${DB_PASSWORD:test@12345}
     driver-class-name: com.mysql.cj.jdbc.Driver
-
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest  
   jpa:
     hibernate:
       ddl-auto: update
