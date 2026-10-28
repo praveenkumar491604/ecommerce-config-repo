@@ -24,7 +24,11 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://localhost:8761/eureka
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,refresh
 security:
   jwt:
     secret: ${JWT_SECRET:VGhpc0lzQURldmVsb3BtZW50T25seVNlY3JldEtleUZvcldhbGdyZWVuczEyMzQ1Njc4OTA=}
