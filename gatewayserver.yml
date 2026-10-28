@@ -1,9 +1,4 @@
 spring:
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
   cloud:
     gateway:
       server:
@@ -52,7 +47,11 @@ spring:
 
 server:
   port: 8086
-
+rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 security:
   jwt:
     secret-base64: VGhpc0lzQURldmVsb3BtZW50T25seVNlY3JldEtleUZvcldhbGdyZWVuczEyMzQ1Njc4OTA=
